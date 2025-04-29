@@ -1,33 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import { View, Animated, Dimensions, TextInput } from 'react-native'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { View, Animated, Dimensions } from 'react-native'
 import styles from './styles';
 import Button from '../button';
 import Colors from '@/constants/Colors';
 import { View as ThemedView, Text } from '../Themed';
-import Dropdown from '../dropdown';
 
 interface ModalProps {
     title: string;
     visible: boolean;
+    onConfirm: () => void;
     onClose: () => void;
 }
 
 const { height } = Dimensions.get('window');
 
-const categories = [
-    {
-        id: '1',
-        label: 'Renda',
-        value: '1'
-    },
-    {
-        id: '2',
-        label: 'Despesa',
-        value: '2'
-    },
-];
-
-export default function Modal({ title, visible, onClose }: ModalProps) {
+export default function Modal({
+    title,
+    visible,
+    children,
+    onConfirm,
+    onClose,
+}: PropsWithChildren<ModalProps>) {
     const [state] = useState({
         opacity: new Animated.Value(0),
         container: new Animated.Value(height),
@@ -84,13 +77,8 @@ export default function Modal({ title, visible, onClose }: ModalProps) {
                         {title}
                     </Text>
 
-                    <View style={{ marginTop: 24, marginBottom: 16 }}>
-                        <Dropdown
-                            data={categories}
-                            placeholder='Selecione a categoria'
-                            value='1'
-                            onChange={() => {}}
-                        />
+                    <View style={{ marginTop: 24 }}>
+                        {children}
                     </View>
 
                     <View style={styles.buttons}>
@@ -102,7 +90,7 @@ export default function Modal({ title, visible, onClose }: ModalProps) {
                         />
                         <Button
                             title='Salvar'
-                            onPress={onClose}
+                            onPress={onConfirm}
                             style={[styles.button, { backgroundColor: Colors['theme'].primary }]}
                             textStyle={{ color: Colors['theme'].white, fontWeight: '600' }}
                         />

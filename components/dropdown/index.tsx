@@ -12,37 +12,50 @@ interface DropdownProps extends Partial<NativeDropdownProps>, ThemeProps {
     data: Array<{ label: string; value: string }>;
     placeholder: string;
     value: NativeDropdownProps['value'];
-    onChange: NativeDropdownProps['onChange'];
     leftIcon?: LucideIcon;
     style?: NativeDropdownProps['style'];
+    error?: string;
+    onChange: NativeDropdownProps['onChange'];
 }
 
 export default function Dropdown({
     data,
     value,
-    onChange,
     placeholder,
     maxHeight = 300,
     leftIcon,
     search,
     searchPlaceholder = 'Digite algo...',
+    style,
+    disable,
+    error,
     darkColor: dark,
     lightColor: light,
-    style,
+    onChange,
 }: DropdownProps) {
     const [isFocus, setIsFocus] = useState(false);
 
     const LeftIcon = leftIcon;
     const accentColor = '#2f95ff';
 
+    const iconColor = disable
+        ? '#aaa'
+        : (isFocus ? accentColor : '#000');
+
     return (
         <View style={[styles.container, style]}>
             <NativeDropdown
-                style={[styles.dropdown, isFocus && { borderColor: accentColor }]}
-                placeholderStyle={styles.placeholderStyle}
+                style={[
+                    styles.dropdown,
+                    isFocus && { borderColor: accentColor },
+                    !disable && error && { borderColor: 'red' },
+                    disable && { backgroundColor: '#ddd' },
+                ]}
+                disable={disable}
+                placeholderStyle={[styles.placeholderStyle, { color: disable ? '#aaa' : '#000' }]}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={[styles.iconStyle, { tintColor: isFocus ? accentColor : '#000' }]}
+                iconStyle={[styles.iconStyle, { tintColor: iconColor }]}
                 data={data}
                 search={search}
                 maxHeight={maxHeight}

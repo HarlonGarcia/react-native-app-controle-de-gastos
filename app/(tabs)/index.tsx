@@ -9,6 +9,7 @@ import ActionSheet from '@/components/action-sheet';
 import { ChevronDown } from 'lucide-react-native';
 import Dropdown from '@/components/dropdown';
 import Modal from '@/components/modal';
+import ModalAddIncome from '@/components/modal/modal-add-income';
 
 const scenarios = [
     'Abril 2025',
@@ -64,9 +65,8 @@ export default function TabOneScreen() {
                     />
                 </View>
             </View>
-            <Modal
-                title='Adicionar renda'
-                visible={modalOpen}
+            <ModalAddIncome
+                open={modalOpen}
                 onClose={() => setModalOpen(false)}
             />
         </View>

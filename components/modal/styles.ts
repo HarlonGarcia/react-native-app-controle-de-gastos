@@ -24,25 +24,26 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
         borderRadius: 50,
         alignSelf: 'center',
-        marginTop: 5
+        marginTop: 5,
     },
     text: {
         marginTop: 20,
         fontSize: 20,
         fontWeight: '600',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     buttons: {
+        marginTop: 24,
+        paddingBottom: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 24,
         gap: 8,
     },
     button: {
         flex: 1,
         justifyContent: 'center',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-    }
+    },
 });
 
 export default styles;
