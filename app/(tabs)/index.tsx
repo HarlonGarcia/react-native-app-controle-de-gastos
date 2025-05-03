@@ -5,10 +5,7 @@ import Button from '@/components/button';
 import Extract from '@/components/extract';
 
 import { useState } from 'react';
-import ActionSheet from '@/components/action-sheet';
-import { ChevronDown } from 'lucide-react-native';
 import Dropdown from '@/components/dropdown';
-import Modal from '@/components/modal';
 import ModalAddIncome from '@/components/modal/modal-add-income';
 
 const scenarios = [

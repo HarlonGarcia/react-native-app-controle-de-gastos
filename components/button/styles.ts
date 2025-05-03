@@ -4,8 +4,7 @@ export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-
+        gap: 8,
         padding: 16,
         backgroundColor: '#fffafa',
         borderRadius: 8,

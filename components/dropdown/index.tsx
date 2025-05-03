@@ -2,14 +2,14 @@ import { LucideIcon } from 'lucide-react-native';
 import { ComponentProps, useState } from 'react';
 import { View } from 'react-native';
 import { Dropdown as NativeDropdown } from 'react-native-element-dropdown';
-import { ThemeProps, useThemeColor } from '../Themed';
+import { ThemeProps } from '../Themed';
 
 import styles from './styles';
 
 type NativeDropdownProps = ComponentProps<typeof NativeDropdown>;
 
 interface DropdownProps extends Partial<NativeDropdownProps>, ThemeProps {
-    data: Array<{ label: string; value: string }>;
+    data: { label: string; value: string }[];
     placeholder: string;
     value: NativeDropdownProps['value'];
     leftIcon?: LucideIcon;

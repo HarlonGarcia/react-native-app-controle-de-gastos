@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import * as yup from 'yup';
 
 export const validationSchema = yup.object().shape({
@@ -14,5 +15,12 @@ export const validationSchema = yup.object().shape({
         .typeError('O valor deve ser um número'),
     installments: yup
         .number(),
+    paymentMethod: yup
+        .string()
+        .required('O método de pagamento não pode ser vazio'),
+    datetime: yup
+        .mixed<Dayjs>()
+        .required('A data não pode ser vazia')
+        .typeError('A data deve ser uma data válida'),
 });
   

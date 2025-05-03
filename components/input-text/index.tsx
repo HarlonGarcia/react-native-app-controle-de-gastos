@@ -2,7 +2,6 @@ import { View, TextInput, TextInputProps, StyleProp, ViewStyle } from 'react-nat
 import { Text } from '../Themed';
 import { styles } from './styles';
 import { LucideIcon } from 'lucide-react-native';
-import { Ref } from 'react';
 
 interface InputTextProps extends TextInputProps {
     label?: string;

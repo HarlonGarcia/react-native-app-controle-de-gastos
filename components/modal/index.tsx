@@ -49,6 +49,7 @@ export default function Modal({
         } else {
             close()
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visible])
 
     return ( 
@@ -68,7 +69,7 @@ export default function Modal({
                 }]}
             >
                 <ThemedView
-                    darkColor='#1c1c1e'
+                    darkColor='#2f2f2f'
                     style={styles.modal}
                 >
                     <View style={styles.indicator} />

@@ -1,12 +1,17 @@
 import { Text, TouchableOpacity } from "react-native";
 import { styles } from './styles';
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps } from 'react';
 import { ThemeProps, useThemeColor } from '../Themed';
+import { LucideIcon } from 'lucide-react-native';
+
+const ICON_SIZE = 20;
 
 interface ButtonProps extends ComponentProps<typeof TouchableOpacity>, ThemeProps {
     title: string;
     textStyle?: React.ComponentProps<typeof Text>['style'];
-    icon?: ReactNode;
+    iconColor?: string;
+    iconBefore?: LucideIcon;
+    iconAfter?: LucideIcon;
 }
 
 export default function Button({
@@ -15,11 +20,12 @@ export default function Button({
     textStyle,
     lightColor: light,
     darkColor: dark,
-    icon,
+    iconColor,
+    iconBefore: IconBefore,
+    iconAfter: IconAfter,
     ...rest
 }: ButtonProps) {
     const backgroundColor = useThemeColor({ light, dark }, 'tint');
-    const Icon = icon;
 
     return (
         <TouchableOpacity
@@ -27,11 +33,24 @@ export default function Button({
             style={[styles.container, { backgroundColor }, style]}
             {...rest}
         >
+            {IconBefore && (
+                <IconBefore
+                    color={iconColor}
+                    size={ICON_SIZE}
+                />
+            )}
+
             <Text style={[styles.text, textStyle]}>
                 {title}
             </Text>
 
-            {icon && Icon}
+            {IconAfter && (
+                <IconAfter
+                    color={iconColor}
+                    style={{ marginLeft: 'auto' }}
+                    size={ICON_SIZE}
+                />
+            )}
         </TouchableOpacity>
     )
 }

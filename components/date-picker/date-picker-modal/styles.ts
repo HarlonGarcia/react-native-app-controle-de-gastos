@@ -1,15 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: '600',
-        marginBottom: 6,
-    },
-    inputContainer: {
+    button: {
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
@@ -26,16 +18,19 @@ export const styles = StyleSheet.create({
         },
         shadowRadius: 3.84,
     },
-    icon: {
-        marginRight: 4,
-    },
-    error: {
-        borderColor: '#ff0000',
-        borderWidth: 1,
-    },
-    input: {
+    overlay: {
         flex: 1,
-        fontSize: 16,
-        color: '#000',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
     },
-})
+    datePicker: {
+        marginHorizontal: 20,
+        borderRadius: 10,
+        padding: 20,
+    },
+    confirmButton: {
+        textAlign: 'center',
+        color: '#007AFF',
+        fontWeight: '600',
+    },
+});

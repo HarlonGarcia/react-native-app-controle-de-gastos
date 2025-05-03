@@ -2,35 +2,21 @@ import InputText from '@/components/input-text';
 import Modal from '..';
 import Dropdown from '@/components/dropdown';
 import { ReturnKeyTypeOptions, View } from 'react-native';
-import { Calendar, Clock, DollarSign, CreditCard } from 'lucide-react-native';
+import { DollarSign, CreditCard } from 'lucide-react-native';
 import { styles } from './styles';
 import { useForm, useWatch } from 'react-hook-form';
 import { useEffect } from 'react';
 import { validationSchema } from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InferType  } from 'yup';
+import DatePickerModal from '@/components/date-picker/date-picker-modal';
+import dayjs from 'dayjs';
+import { mocks } from '@/mock';
 
 interface ModalAddIncomeProps {
     open: boolean;
     onClose: () => void;
 }
-
-const categories: { label: string; value: string; }[] = [
-    { label: 'Alimentação', value: '1' },
-    { label: 'Transporte', value: '2' },
-    { label: 'Saúde', value: '3' },
-    { label: 'Educação', value: '4' },
-    { label: 'Lazer', value: '5' },
-    { label: 'Outros', value: '6' },
-];
-
-const paymentMethods: { label: string; value: string; }[] = [
-    { label: 'Cartão de crédito', value: '1' },
-    { label: 'Cartão de débito', value: '2' },
-    { label: 'Dinheiro', value: '3' },
-    { label: 'Transferência', value: '4' },
-    { label: 'Cheque', value: '5' },
-];
 
 export default function ModalAddIncome({
     open,
@@ -52,6 +38,19 @@ export default function ModalAddIncome({
     const category = useWatch({
         control,
         name: 'category',
+        defaultValue: mocks.categories[0].value,
+    });
+
+    const paymentMethod = useWatch({
+        control,
+        name: 'paymentMethod',
+        defaultValue: mocks.paymentMethods[0].value,
+    });
+
+    const datetime = useWatch({
+        control,
+        name: 'datetime',
+        defaultValue: dayjs(),
     });
     
     const closeModal = () => {
@@ -73,6 +72,8 @@ export default function ModalAddIncome({
         register('category');
         register('amount');
         register('installments');
+        register('datetime');
+        register('paymentMethod');
     }, [register]);
 
     return (
@@ -90,8 +91,8 @@ export default function ModalAddIncome({
                 error={errors.title?.message}
             />
             <Dropdown
-                data={categories}
-                disable={categories.length === 0}
+                data={mocks.categories}
+                disable={mocks.categories.length === 0}
                 placeholder='Selecione a categoria'
                 value={category}
                 style={{ marginBottom: 16 }}
@@ -119,23 +120,18 @@ export default function ModalAddIncome({
                 />
             </View>
             <Dropdown
-                data={paymentMethods}
-                disable={paymentMethods.length === 0}
+                data={mocks.paymentMethods}
+                disable={mocks.paymentMethods.length === 0}
                 placeholder='Forma de pagamento'
-                value='1'
+                value={paymentMethod}
                 style={{ marginBottom: 16 }}
-                onChange={() => {}}
+                onChange={(value) => setValue('paymentMethod', value)}
             />
             <View style={styles.inputTextArea}>
-                <InputText
-                    {...inputProps}
-                    containerStyle={{ flex: 1 }}
-                    icon={Calendar}
-                />
-                <InputText
-                    {...inputProps}
-                    containerStyle={{ flex: 1 }}
-                    icon={Clock}
+                <DatePickerModal
+                    value={datetime}
+                    onChange={(value) => setValue('datetime', value)}
+                    timePicker
                 />
             </View>
         </Modal>
