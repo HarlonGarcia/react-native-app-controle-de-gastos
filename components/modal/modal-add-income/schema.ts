@@ -11,7 +11,7 @@ export const validationSchema = yup.object().shape({
     amount: yup
         .number()
         .required('O valor não pode ser vazio')
-        .positive('O valor deve ser positivo')
+        .moreThan(-1, 'O valor deve ser maior que zero')
         .typeError('O valor deve ser um número'),
     installments: yup
         .number(),

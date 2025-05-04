@@ -6,13 +6,15 @@ O app de controle de gastos é uma aplicação simples que permite ao usuário r
 
 1. Clone o repositório:
    ```bash
-    git clone https://github.com/HarlonGarcia/react-native-app-controle-de-gastos.git
+    git clone https://github.com/HarlonGarcia/react-native-app-controle-de-gastos.git &&
     cd react-native-app-controle-de-gastos
     ```
+
 2. Instale as dependências:
     ```bash
     yarn install
     ```
+
 3. Inicie o projeto:
     ```bash
     yarn start

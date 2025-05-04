@@ -4,14 +4,17 @@ import Dropdown from '@/components/dropdown';
 import { ReturnKeyTypeOptions, View } from 'react-native';
 import { DollarSign, CreditCard } from 'lucide-react-native';
 import { styles } from './styles';
-import { useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { validationSchema } from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InferType  } from 'yup';
 import DatePickerModal from '@/components/date-picker/date-picker-modal';
+import { mocks } from '@/services/mock';
+import { getAsArray, setAsValue } from '@/services/storage';
 import dayjs from 'dayjs';
-import { mocks } from '@/mock';
+import uuid from 'react-native-uuid';
+import Dates from '@/constants/Dates';
 
 interface ModalAddIncomeProps {
     open: boolean;
@@ -24,7 +27,6 @@ export default function ModalAddIncome({
 }: ModalAddIncomeProps) {
     const {
         register,
-        setValue,
         handleSubmit,
         reset,
         control,
@@ -33,33 +35,42 @@ export default function ModalAddIncome({
         },
     } = useForm({
         resolver: yupResolver(validationSchema),
-    });
-
-    const category = useWatch({
-        control,
-        name: 'category',
-        defaultValue: mocks.categories[0].value,
-    });
-
-    const paymentMethod = useWatch({
-        control,
-        name: 'paymentMethod',
-        defaultValue: mocks.paymentMethods[0].value,
-    });
-
-    const datetime = useWatch({
-        control,
-        name: 'datetime',
-        defaultValue: dayjs(),
+        defaultValues: {
+            category: mocks.categories[0].value,
+            paymentMethod: mocks.paymentMethods[0].value,
+            amount: 0,
+            installments: 0,
+            datetime: dayjs(),
+        }
     });
     
     const closeModal = () => {
-        reset();
         onClose();
+        reset({
+            title: '',
+            category: mocks.categories[0].value,
+            amount: 0,
+            installments: 0,
+            paymentMethod: mocks.paymentMethods[0].value,
+            datetime: dayjs(),
+        });
     };
 
-    const onSubmit = (data: InferType<typeof validationSchema>) => {
-        console.log(data)
+    const onSubmit = async (data: InferType<typeof validationSchema>) => {
+        const incomes = await getAsArray('incomes');
+
+        const newIncome = {
+            ...data,
+            id: uuid.v4(),
+            datetime: dayjs(data.datetime).format(Dates.datetime),
+        }
+
+        await setAsValue('incomes', {
+            ...incomes,
+            ...newIncome,
+        });
+
+        closeModal();
     };
 
     const inputProps = {
@@ -83,55 +94,92 @@ export default function ModalAddIncome({
             onClose={closeModal}
             onConfirm={handleSubmit(onSubmit)}
         >
-            <InputText
-                {...inputProps}
-                placeholder='Digite o título'
-                containerStyle={styles.inputText}
-                onChangeText={(value) => setValue('title', value)}
-                error={errors.title?.message}
+            <Controller
+                name='title'
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                    <InputText
+                        {...inputProps}
+                        placeholder='Digite o título'
+                        containerStyle={styles.inputText}
+                        value={value}
+                        onChangeText={onChange}
+                        error={errors.title?.message}
+                    />
+                )}
             />
-            <Dropdown
-                data={mocks.categories}
-                disable={mocks.categories.length === 0}
-                placeholder='Selecione a categoria'
-                value={category}
-                style={{ marginBottom: 16 }}
-                onChange={(value) => setValue('category', value)}
-                error={errors.category?.message}
+            <Controller
+                name='category'
+                control={control}
+                render={({ field }) => (
+                    <Dropdown
+                        data={mocks.categories}
+                        disable={mocks.categories.length === 0}
+                        placeholder='Selecione a categoria'
+                        style={{ marginBottom: 16 }}
+                        error={errors.category?.message}
+                        {...field}
+                    />
+                )}
             />
             <View style={styles.inputTextArea}>
-                <InputText
-                    {...inputProps}
-                    placeholder='Digite o valor'
-                    containerStyle={{ flex: 1 }}
-                    onChangeText={(value) => setValue('amount', Number(value))}
-                    error={errors.amount?.message}
-                    type='numeric'
-                    icon={DollarSign}
+                <Controller
+                    name='amount'
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                        <InputText
+                            {...inputProps}
+                            placeholder='Digite o valor'
+                            containerStyle={{ flex: 1 }}
+                            value={String(value)}
+                            onChangeText={onChange}
+                            type='numeric'
+                            error={errors.amount?.message}
+                            icon={DollarSign}
+                        />
+                    )}
                 />
-                <InputText
-                    {...inputProps}
-                    placeholder='Nº de parcelas'
-                    containerStyle={{ flex: 1 }}
-                    onChangeText={(value) => setValue('installments', Number(value))}
-                    error={errors.installments?.message}
-                    type='numeric'
-                    icon={CreditCard}
+                <Controller
+                    name='installments'
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                        <InputText
+                            {...inputProps}
+                            placeholder='Nº de parcelas'
+                            containerStyle={{ flex: 1 }}
+                            value={String(value)}
+                            onChangeText={onChange}
+                            type='numeric'
+                            error={errors.installments?.message}
+                            icon={CreditCard}
+                        />
+                    )}
                 />
             </View>
-            <Dropdown
-                data={mocks.paymentMethods}
-                disable={mocks.paymentMethods.length === 0}
-                placeholder='Forma de pagamento'
-                value={paymentMethod}
-                style={{ marginBottom: 16 }}
-                onChange={(value) => setValue('paymentMethod', value)}
+            <Controller
+                name='paymentMethod'
+                control={control}
+                render={({ field }) => (
+                    <Dropdown
+                        data={mocks.paymentMethods}
+                        disable={mocks.paymentMethods.length === 0}
+                        placeholder='Forma de pagamento'
+                        style={{ marginBottom: 16 }}
+                        error={errors.paymentMethod?.message}
+                        {...field}
+                    />
+                )}
             />
             <View style={styles.inputTextArea}>
-                <DatePickerModal
-                    value={datetime}
-                    onChange={(value) => setValue('datetime', value)}
-                    timePicker
+                <Controller
+                    name='datetime'
+                    control={control}
+                    render={({ field }) => (
+                        <DatePickerModal
+                            timePicker
+                            {...field}
+                        />
+                    )}
                 />
             </View>
         </Modal>
